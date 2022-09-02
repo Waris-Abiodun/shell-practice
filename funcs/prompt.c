@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 int main()
 {
@@ -44,15 +46,31 @@ int main()
 		{
 			argv[n] = malloc(sizeof(char) *strlen(token));
 			strcpy(argv[n], token);
-			printf("argv[%d] : %s\n", n , token);
+		//	printf("argv[%d] : %s\n", n , token);
 			n++;
 			token = strtok(NULL, sep);
 
 		}
 		/*** execution**/
-		if (execve(argv[0], argv, NULL) == -1)
+		pid_t child;
+		child = fork();
+		int stat;
+		if(child == -1)
 		{
-			perror("unable to execute fuction");
+			perror("child cant be created");
+
+		}
+		else if (child == 0)
+		{
+
+			if (execve(argv[0], argv, NULL) == -1)
+			{
+				perror("unable to execute fuction");
+			}
+		}
+		else
+		{
+			wait(&stat);
 		}
 
 
