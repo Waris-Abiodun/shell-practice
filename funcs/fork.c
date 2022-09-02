@@ -1,9 +1,11 @@
 #include <stdio.h>
-//#include <sys/types.h> 
+#include <sys/types.h> 
+#include <sys/wait.h>
 #include <unistd.h>
 int main(void)
 {
 	pid_t pid;
+	int stat;
 	printf("parent pid = %u\n", getpid());
 	printf("Before fork\n");
 	pid = fork();
@@ -16,9 +18,12 @@ int main(void)
 	{
 		printf("After fork\n");
 		printf("child is %u\n", getpid());
+		sleep(20);
+		printf("wait");
 	}
 	else
 	{
+	//	wait(&stat);
 		printf("After fork\nparent pid %u\n",  getpid());
 	}
 	return (0);

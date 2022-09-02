@@ -1,19 +1,45 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
-int main()
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+int main(void)
 {
-	char *argv[];
-	size_t n = 0;
-	argv = malloc(100);
-	printf("%s\n", argv[0]);
-	printf("Before execve\n");
-	if (execve("/bin/ls", argv, NULL) == -1);
-	{
-		perror("Error:");
-	
-	}
-	printf("Today is a good day");
-	printf("After execve\n");
-	return (0);
+	//printf("%s\n", env[0]);
+	char **argv;
+	argv = malloc(300);
+	int stat;
+	argv[0] = "/bin/ls";
+	argv[1] =  "-l";
+	argv[2] = "/tmp/";
+	argv[3] = NULL;
+
+
+	pid_t child;
+	   int i;
+	   for(i = 0; i<5; i++)
+	   {
+	    child = fork();
+	    if (child == -1)
+	    {
+		    perror("forking failed");
+		    return -1;
+	    }
+	    else if (child == 0)
+	    {
+
+		    if (execve(argv[0], argv, NULL) == -1)
+		    {
+			    perror("new ERROr::");
+		    }
+		    sleep(3);
+	    }
+	    else 
+	    {
+		    wait(&stat);
+		    printf("parent\n");
+	    }
+	   }
+	   printf("done\n");
+	    return (0);
 }
