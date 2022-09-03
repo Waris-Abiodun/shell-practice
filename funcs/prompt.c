@@ -31,27 +31,37 @@ int main()
 		buf_cpy = malloc(num_read);
 		strcpy(buf_cpy, buf);
 
-		token = strtok(buf, sep);
+		token = strtok(buf_cpy, sep);
 		int count = 1;
 		while (token)
 		{
 			token = strtok(NULL, sep);
 			count ++;
 		}
+		token = NULL;
+		free(token);
+		free(buf_cpy);
 		argv = malloc (count);
 
-		token = strtok(buf_cpy, sep);
+		token = strtok(buf, sep);
 		int n = 0;
 		while(token)
 		{
+			
 			argv[n] = malloc(sizeof(char) *strlen(token));
 			strcpy(argv[n], token);
-		//	printf("argv[%d] : %s\n", n , token);
-			n++;
+		//	printf("argv[%d] : %s\n", n , argv[n]);
 			token = strtok(NULL, sep);
+			n++;
 
 		}
-		/*** execution**/
+		argv[n] = NULL;
+		if (strcmp(argv[0], "exit") == 0)
+		{
+			printf("exiting...\n");
+			return 0;
+		}
+					/*** execution**/
 		pid_t child;
 		child = fork();
 		int stat;
@@ -75,5 +85,6 @@ int main()
 
 
 	}
+	
 	return (0);
 }
